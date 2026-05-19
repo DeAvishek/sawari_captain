@@ -1,7 +1,26 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import { Image } from "expo-image";
 import { router } from "expo-router";
+import { Controller, useForm } from "react-hook-form";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, } from "react-native";
+import { SignupFormData, signupSchema } from "./schema/signupschema";
 export default function Index() {
+  const { handleSubmit, control, formState: { errors } } = useForm<SignupFormData>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: {
+      userName: "",
+      phoneNumber: ""
+    }
+  })
+  const BACKEND_URL = "xnxx"
+  const onSubmit=async(data:SignupFormData)=>{
+    try {
+      const response = await axios.post(`${BACKEND_URL}/create/driver`,data)
+    } catch (error) {
+      
+    }
+  }
   return (
     <View style={styles.container}>
       <View style={styles.topImagediv}>
@@ -11,42 +30,53 @@ export default function Index() {
           source={require("@/assets/images/captain.png")}
         />
       </View>
-            <View style={styles.LoginParent}>
+      <View style={styles.LoginParent}>
         <View style={styles.LoginChild}>
 
           {/* ===== INPUT SECTION ===== */}
           <View style={styles.inputSection}>
             <View style={styles.inputBlock}>
               <Text style={styles.TextStyle}>What's Your Name?</Text>
-              
-                    <TextInput
-                      style={styles.Textinput}
-                      placeholder="Enter your name"
-                      placeholderTextColor="#999"
-                      // value={value}
-                      // onChangeText={onChange}
-                    />
-
+              <Controller
+                control={control}
+                name="userName"
+                rules={{ required: true }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    placeholder="UserName"
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    style={styles.Textinput}
+                  />
+                )}
+              />
+              {errors.userName && (<Text style={{ color: "red" }}>{errors.phoneNumber?.message}</Text>)}
             </View>
 
             <View style={styles.inputBlock}>
               <Text style={styles.TextStyle}>What's Your Number?</Text>
+              <Controller
+                control={control}
+                name="phoneNumber"
+                rules={{ required: true }}
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
+                    placeholder="PhoneNumber"
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    keyboardType="number-pad"
+                    value={value}
                     style={styles.Textinput}
-                    keyboardType="phone-pad"
-                    placeholder="Enter your number"
-                    placeholderTextColor="#999"
-                    maxLength={10}
-                    // value={value}
-                    // onChangeText={onChange}
                   />
-                
+                )}
+              />
             </View>
           </View>
 
           {/* ===== BUTTON SECTION ===== */}
           <View style={styles.buttonSection}>
-            <TouchableOpacity style={styles.button} onPress={()=>router.push("/verification")}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push("/verification")}>
               <Text style={styles.buttonText}>N e x t</Text>
             </TouchableOpacity>
 
