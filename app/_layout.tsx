@@ -4,7 +4,7 @@ export default function RootLayout() {
   return(
     <Stack>
       <Stack.Screen name="index" options={{headerShown:false}}/>
-      <Stack.Screen name="verification" options={{headerShown:true}}/>
+      <Stack.Screen name="verification" options={{headerShown:false}}/>
       <Stack.Screen name="locationallow" options={{headerShown:true}}/>
       <Stack.Screen name="home" options={{headerShown:false}}/>
 

@@ -5,6 +5,7 @@ import { router } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, } from "react-native";
 import { phoneNumberData, phoneNumberSchema } from "./schema/phonenumberSchema";
+import { AuthStore } from "./store/authstore";
 export default function Index() {
   const { handleSubmit, control, formState: { errors } } = useForm<phoneNumberData>({
     resolver: zodResolver(phoneNumberSchema),
@@ -12,12 +13,17 @@ export default function Index() {
       phoneNumber:""
     }
   })
+  const setPhoneNumber = AuthStore(state=>state.setPhoneNumber)
   const BACKEND_URL = "http://10.0.2.2:8088"
   const onSubmit=async(data:phoneNumberData)=>{
     try {
       const response = await axios.post(`${BACKEND_URL}/Driver/login`,data)
       if(response.status===200){
+        setPhoneNumber(response.data?.phoneNumber);
         console.log(response.data)
+        setTimeout(() => {
+          router.push('/verification')
+        }, 2000);
       }
     } catch (error) {
       console.log("hii",error)
