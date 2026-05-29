@@ -4,21 +4,23 @@ import { Image } from "expo-image";
 import { router } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, } from "react-native";
-import { SignupFormData, signupSchema } from "./schema/signupschema";
+import { phoneNumberData, phoneNumberSchema } from "./schema/phonenumberSchema";
 export default function Index() {
-  const { handleSubmit, control, formState: { errors } } = useForm<SignupFormData>({
-    resolver: zodResolver(signupSchema),
+  const { handleSubmit, control, formState: { errors } } = useForm<phoneNumberData>({
+    resolver: zodResolver(phoneNumberSchema),
     defaultValues: {
-      userName: "",
-      phoneNumber: ""
+      phoneNumber:""
     }
   })
-  const BACKEND_URL = "xnxx"
-  const onSubmit=async(data:SignupFormData)=>{
+  const BACKEND_URL = "http://10.0.2.2:8088"
+  const onSubmit=async(data:phoneNumberData)=>{
     try {
-      const response = await axios.post(`${BACKEND_URL}/create/driver`,data)
+      const response = await axios.post(`${BACKEND_URL}/Driver/login`,data)
+      if(response.status===200){
+        console.log(response.data)
+      }
     } catch (error) {
-      
+      console.log("hii",error)
     }
   }
   return (
@@ -36,25 +38,6 @@ export default function Index() {
           {/* ===== INPUT SECTION ===== */}
           <View style={styles.inputSection}>
             <View style={styles.inputBlock}>
-              <Text style={styles.TextStyle}>What's Your Name?</Text>
-              <Controller
-                control={control}
-                name="userName"
-                rules={{ required: true }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    placeholder="UserName"
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                    style={styles.Textinput}
-                  />
-                )}
-              />
-              {errors.userName && (<Text style={{ color: "red" }}>{errors.phoneNumber?.message}</Text>)}
-            </View>
-
-            <View style={styles.inputBlock}>
               <Text style={styles.TextStyle}>What's Your Number?</Text>
               <Controller
                 control={control}
@@ -71,6 +54,7 @@ export default function Index() {
                   />
                 )}
               />
+              {errors && <Text style={{color:'red'}}>{errors.phoneNumber?.message}</Text>}
             </View>
           </View>
 
@@ -82,7 +66,7 @@ export default function Index() {
 
             <Text style={styles.orText}>OR</Text>
 
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
               <Text style={styles.buttonText}>L o g i n</Text>
             </TouchableOpacity>
           </View>
