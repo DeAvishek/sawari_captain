@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from 'react-native-confirmation-code-field';
 import { AuthStore } from './store/authstore';
-const verification = () => {
+const Verification = () => {
     const BACKEND_URL ="http://10.0.2.2:8088"
     const RESEND_TIME = 5 //need to set 30 
 
@@ -60,6 +60,8 @@ const verification = () => {
             }else if(response.status===201){
               //need to create username
               console.log(response.data)
+              console.log(response.status)
+              router.push("/signup")
             }
         }
         catch(error:any){
@@ -224,4 +226,4 @@ const style = StyleSheet.create({
         fontWeight: 'bold',
     },
 })
-export default verification
+export default Verification

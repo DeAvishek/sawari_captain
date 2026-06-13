@@ -7,7 +7,7 @@ export default function RootLayout() {
       <Stack.Screen name="verification" options={{headerShown:false}}/>
       <Stack.Screen name="locationallow" options={{headerShown:true}}/>
       <Stack.Screen name="home" options={{headerShown:false}}/>
-
+      <Stack.Screen name="signup" options={{headerShown:false}}/>
     </Stack>
   );
 }
