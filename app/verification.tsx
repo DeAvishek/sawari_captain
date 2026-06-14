@@ -2,13 +2,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from "expo-router";
+import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from 'react-native-confirmation-code-field';
 import { AuthStore } from './store/authstore';
 const Verification = () => {
-    const BACKEND_URL ="http://10.0.2.2:8088"
+    const BACKEND_URL = "http://192.168.0.117:8088"
     const RESEND_TIME = 5 //need to set 30 
 
     //state management-->
@@ -25,14 +25,13 @@ const Verification = () => {
         setValue,
     });
     //-->end of cell
-   
-    const router = useRouter()
+
     const navigation = useNavigation()
 
     //populate item from AuthStore;
-    const {phoneNumber} = AuthStore();
-    const setJwt = AuthStore(state=>state.setJwt)
-    const setUser = AuthStore(state=>state.setUser)
+    const phoneNumber = AuthStore((state) => state.phoneNumber);
+    const setJwt = AuthStore((state) => state.setJwt);
+    const setUser = AuthStore((state) => state.setUser);
     //-->end of store
 
     //useEfffect--->
@@ -47,28 +46,28 @@ const Verification = () => {
     }, [timer])
     //--->end of effect
 
-    const onPressOnNext=async()=>{
-        const body={
-            otp:value
+    const onPressOnNext = async () => {
+        const body = {
+            otp: value
         }
-        try{
+        try {
             console.log(`${BACKEND_URL}/Driver/verify/${phoneNumber}`) //need to remove
-            const response = await axios.post(`${BACKEND_URL}/Driver/verify/${phoneNumber}`,body)
-            if(response.status===200){
-              //everthing clear
-              console.log(response.data)
-            }else if(response.status===201){
-              //need to create username
-              console.log(response.data)
-              console.log(response.status)
-              router.push("/signup")
+            const response = await axios.post(`${BACKEND_URL}/Driver/verify/${phoneNumber}`, body)
+            if (response.status === 200) {
+                //everthing clear
+                console.log(response.data)
+            } else if (response.status === 201) {
+                //need to create username
+                console.log(response.data)
+                console.log(response.status)
+                router.push("/signup")
             }
         }
-        catch(error:any){
+        catch (error: any) {
             console.log(error.response.data)
         }
     }
-    const onPressOnResendForOtp=()=>{
+    const onPressOnResendForOtp = () => {
         //need to do
         router.push("/home")
         console.log("clicekd on onPressOnResendForOtp")
@@ -80,13 +79,13 @@ const Verification = () => {
                     <TouchableOpacity
                         style={style.backButton}
                         onPress={() => navigation.goBack()}
-                    > 
+                    >
                         <Ionicons name="arrow-back" size={24} color="#000" />
                     </TouchableOpacity>
                     <Text style={style.TextStyle}>Verify OTP</Text>
                     <View>
                         <Text style={style.TextStyle}>Enter Verification Code</Text>
-                        <Text style={{ fontSize: 15 }}>Send to +91{phoneNumber?.slice(0,-6)+"******"}</Text>
+                        <Text style={{ fontSize: 15 }}>Send to +91{phoneNumber?.slice(0, -6) + "******"}</Text>
                     </View>
                 </View>
             </View>
@@ -119,7 +118,7 @@ const Verification = () => {
                     {loading ?
                         (
                             <TouchableOpacity style={style.resendButtonStyle}>
-                            <Text style={style.buttonText}>Resend in <Text style={{color:'red'}}>{timer}</Text></Text>
+                                <Text style={style.buttonText}>Resend in <Text style={{ color: 'red' }}>{timer}</Text></Text>
                             </TouchableOpacity>
                         ) :
                         (<TouchableOpacity style={style.resendButtonStyle} onPress={onPressOnResendForOtp}>

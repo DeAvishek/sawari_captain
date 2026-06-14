@@ -14,7 +14,7 @@ export default function Index() {
     }
   })
   const setPhoneNumber = AuthStore(state=>state.setPhoneNumber)
-  const BACKEND_URL = "http://10.0.2.2:8088"
+  const BACKEND_URL = "http://192.168.0.117:8088"
   const onSubmit=async(data:phoneNumberData)=>{
     try {
       const response = await axios.post(`${BACKEND_URL}/Driver/login`,data)

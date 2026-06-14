@@ -1,11 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
+import { Image } from 'expo-image';
+import { router } from 'expo-router';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { userNameData, userNameSchema } from './schema/usernameSchema';
 import { AuthStore } from './store/authstore';
-const SignupPage = () => {
-  const BACKEND_URL = "http://10.0.2.2:8088"
+const Signup = () => {
+  const { phoneNumber, verified } = AuthStore();
+  const BACKEND_URL = "http://192.168.0.117:8088"
   const { handleSubmit, control, formState: { errors } } = useForm<userNameData>({
     resolver: zodResolver(userNameSchema),
     defaultValues: {
@@ -13,21 +17,25 @@ const SignupPage = () => {
       vehicleType: "",
     }
   })
-
-  //store management--->
-  const { phoneNumber, verified } = AuthStore()
-
-  // -->end of store
   const onSubmit = async (data: userNameData) => {
-    const body = {
-      userName: data.userName,
-      phoneNumber: phoneNumber,
-      isVerified: verified,
-      isOnline: true,
-      isOnRide: false,
-      vehicleType: data.vehicleType
+    try {
+      console.log(data)
+      const body = {
+        userName: data.userName,
+        phoneNumber: phoneNumber,
+        isVerified: verified,
+        isOnline: true,
+        isOnRide: false,
+        vehicleType: data.vehicleType
+      }
+      const response = await axios.post(`${BACKEND_URL}/Driver/create`, body);
+      if (response.status === 201) {
+        console.log(response.data) //todo to remove
+        router.push("/locationallow")
+      }
+    } catch (error) {
+      console.log("Error at sign up", error)
     }
-
   }
   return (
     <View style={styles.container}>
@@ -38,7 +46,7 @@ const SignupPage = () => {
           source={require("@/assets/images/captain.png")}
         />
       </View>
-      <View style={styles.LoginParent}>
+      <View style={styles.LoginParent}>\
         <View style={styles.LoginChild}>
           <View style={styles.inputSection}>
             <View style={styles.inputBlock}>
@@ -46,7 +54,6 @@ const SignupPage = () => {
               <Controller
                 control={control}
                 name="userName"
-                rules={{ required: true }}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     placeholder="Username"
@@ -58,17 +65,16 @@ const SignupPage = () => {
                   />
                 )}
               />
-              {errors && <Text style={{ color: 'red' }}>{errors.userName?.message}</Text>}
+              {errors.userName && <Text style={{ color: 'red' }}>{errors.userName?.message}</Text>}
             </View>
             <View style={styles.inputBlock}>
-              <Text style={styles.TextStyle}>What's Your Veichle type?</Text>
+              <Text style={styles.TextStyle}>What's Your Name?</Text>
               <Controller
                 control={control}
                 name="vehicleType"
-                rules={{ required: true }}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    placeholder="Veichle type"
+                    placeholder="vehicle type"
                     onBlur={onBlur}
                     onChangeText={onChange}
                     keyboardType="number-pad"
@@ -77,18 +83,18 @@ const SignupPage = () => {
                   />
                 )}
               />
-              {errors && <Text style={{ color: 'red' }}>{errors.vehicleType?.message}</Text>}
+              {errors.vehicleType && <Text style={{ color: 'red' }}>{errors.vehicleType?.message}</Text>}
             </View>
           </View>
           <View style={styles.buttonSection}>
-            <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
-              <Text style={styles.buttonText}>L o g i n</Text>
-            </TouchableOpacity>
-          </View>
+           <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
+             <Text style={styles.buttonText}>L o g i n</Text>
+           </TouchableOpacity>
+         </View>
         </View>
       </View>
     </View>
-  );
+  )
 }
 const styles = StyleSheet.create({
   container: {
@@ -118,7 +124,7 @@ const styles = StyleSheet.create({
 
   LoginChild: {
     flex: 1,
-    gap: 150,
+    gap: 150, // 🔥 KEY LINE
   },
 
   /* INPUT SECTION */
@@ -174,4 +180,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default SignupPage
+export default Signup
