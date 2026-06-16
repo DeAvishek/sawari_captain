@@ -1,7 +1,9 @@
 export const ENDPOINTS = {
     auth:{
         "login":"/Driver/login",
-        "signup":"/Dirver/create",
-        "verification":"/Driver/verify"
+        "signup":"/Driver/create",
+        "verification":(
+            phoneNumber:string
+        )=>`/Driver/verify/${phoneNumber}`
     }
 }
