@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { userNameData, userNameSchema } from './schema/usernameSchema';
+import { userNameData, userNameSchema } from '../features/auth/schema/usernameSchema';
 import { AuthStore } from './store/authstore';
 const Signup = () => {
   const { phoneNumber, verified } = AuthStore();
