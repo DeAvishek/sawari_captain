@@ -4,6 +4,7 @@ export const ENDPOINTS = {
         "signup":"/Driver/create",
         "verification":(
             phoneNumber:string
-        )=>`/Driver/verify/${phoneNumber}`
+        )=>`/Driver/verify/${phoneNumber}`,
+        "refreshtoken":(refreshToken:string)=> `/Driver/refresh-token/${refreshToken}`
     }
 }

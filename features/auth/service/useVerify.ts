@@ -5,7 +5,7 @@ import { AuthStore } from "../store/authstore";
 import { verifyOtpTypes } from "../types/verifyotp.types";
 export function useVerify(){
     const [loading, setloading] = useState<boolean>(false);
-    const {phoneNumber,setJwt,setUser} = AuthStore()
+    const {phoneNumber,setJwt,setUser,setRefreshToken} = AuthStore()
     async function verify(data:verifyOtpTypes){
         try {
             setloading(true);
@@ -19,6 +19,7 @@ export function useVerify(){
                 //user already exist
                 console.log(response.data);
                 setJwt(response.data.Bearer);
+                setRefreshToken(response.data.RefreshToken)
                 setUser({"userName":response.data.userName||"","userID":response.data.userId||"","role":"Driver"})
                 router.push('/locationallow')
             }

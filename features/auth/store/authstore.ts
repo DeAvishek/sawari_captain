@@ -14,6 +14,7 @@ type AuthState = {
     user: User | null;
     verified: boolean;
     vehicleType: string | null;
+    refreshToken: string|null;
 };
 
 type Actions = {
@@ -23,6 +24,7 @@ type Actions = {
     setUser: (user: User | null) => void;
     setVerified: (status: boolean) => void;
     setVehicleType: (type: string | null) => void;
+    setRefreshToken:(token:string|null)=>void
 };
 
 // Initial state object for easy re-use during logout
@@ -32,6 +34,7 @@ const initialState: AuthState = {
     user: null,
     verified: false,
     vehicleType: null,
+    refreshToken:null,
 };
 
 export const AuthStore = create<AuthState & Actions>()(
@@ -45,7 +48,7 @@ export const AuthStore = create<AuthState & Actions>()(
             setUser: (user) => set({ user }),
             setVerified: (status) => set({ verified: status }),
             setVehicleType: (type) => set({ vehicleType: type }),
-            
+            setRefreshToken:(token)=>set({refreshToken:token}),
             // Clean logout that flushes everything
             logout: () => set({ ...initialState }),
         }),
