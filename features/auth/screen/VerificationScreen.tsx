@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import VerificationForm from '../components/VerificationForm';
+import VerificationForm from '../components/forms/VerificationForm';
 import { CELL_COUNT } from '../helper/constants';
 import { useVerify } from '../service/useVerify';
 const VerificationScreen = () => {

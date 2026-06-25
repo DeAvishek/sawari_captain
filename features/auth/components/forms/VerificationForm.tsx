@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from 'react-native-confirmation-code-field';
-import { useVerify } from '../service/useVerify';
+import { useVerify } from '../../service/useVerify';
 type props = {
     loading: boolean,
     timerLoading:boolean,

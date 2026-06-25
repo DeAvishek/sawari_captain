@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
 import { Controller, useForm } from "react-hook-form"
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { phoneNumberData, phoneNumberSchema } from '../schema/phonenumberSchema'
+import { phoneNumberData, phoneNumberSchema } from '../../schema/phonenumberSchema'
 type props = {
     onSubmit: (data: any) => Promise<void>
     loading: boolean,

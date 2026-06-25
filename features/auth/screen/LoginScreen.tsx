@@ -1,11 +1,10 @@
 import { Image } from 'expo-image';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import Loginform from '../components/Loginform';
+import Loginform from '../components/forms/Loginform';
 import { useLogin } from '../service/useLogin';
 const LoginScreen = () => {
   const { login, loading } = useLogin();
-  //should pass the login to login form wher the actual data will be build
   return (
     <View style={styles.container}>
       <View style={styles.topImagediv}>
