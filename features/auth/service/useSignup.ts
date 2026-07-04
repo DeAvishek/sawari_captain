@@ -11,7 +11,7 @@ export function useSignup(){
             setloading(true);
             const response = await AuthApi.signup(data);
             if(response.status==201){
-                console.log(response)
+                console.log(response.data)
                 setJwt(response.data.Bearer)
                 setRefreshToken(response.data.RefreshToken)
                 setUser({"userName":response.data.userName||"","userID":response.data.userId||"","role":"Driver"})
