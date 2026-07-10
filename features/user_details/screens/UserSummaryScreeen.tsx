@@ -1,16 +1,20 @@
+import { AuthStore } from "@/features/auth/store/authstore";
 import {
   Car,
   Clock,
   Star,
   Wallet,
 } from "lucide-react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useGetSummary } from "../service/useGetSummary";
 
 const UserSummaryScreen = () => {
-  const { userSummary } = useGetSummary();
-
+  const phoneNumber = AuthStore.getState().phoneNumber
+  const { userSummary,getSummary} = useGetSummary();
+  useEffect(()=>{
+    getSummary(phoneNumber||"")
+  },[])
   const features = [
     {
       name: "Earnings",
@@ -70,14 +74,14 @@ const UserSummaryScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    margin: 2,
+    // margin: 2,
     padding: 3,
-    backgroundColor: "#fff",
+    backgroundColor: "rgba(255, 255, 255, 0.55)", // translucent
     borderRadius: 10,
-    elevation: 4,
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
+    // elevation: 4,
+    // shadowColor: "#000",
+    // shadowOpacity: 0.08,
+    // shadowRadius: 8,
     height:130
   },
 

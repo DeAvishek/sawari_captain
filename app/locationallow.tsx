@@ -1,3 +1,4 @@
+import { AuthStore } from "@/features/auth/store/authstore";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
@@ -9,6 +10,7 @@ import websocket from './helper/websocket';
 const { width } = Dimensions.get('window');
 const Locationallow = () => {
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const userId = AuthStore.getState().user?.userID
     useEffect(() => {
 
         const locationRequest = async () => {
@@ -16,7 +18,7 @@ const Locationallow = () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status === "granted") {
                 const currLocation = await Location.getCurrentPositionAsync();
-                sendLocation({ latitude: currLocation.coords.latitude, longitude: currLocation.coords.longitude })
+                sendLocation({ latitude: currLocation.coords.latitude, longitude: currLocation.coords.longitude,userId:userId||""})
                 console.log("Location access is already granted,by current location is ", currLocation.coords) //todo remove
                 router.push('/home')
             }
@@ -31,7 +33,7 @@ const Locationallow = () => {
             return;
         }
         const currLocation = await Location.getCurrentPositionAsync();
-        sendLocation({ latitude: currLocation.coords.latitude, longitude: currLocation.coords.longitude })
+        sendLocation({ latitude: currLocation.coords.latitude, longitude: currLocation.coords.longitude ,userId:userId||""})
         console.log("Loaction granted successfully", currLocation.coords.latitude, currLocation.coords.longitude); //todo to remove
         router.push("/home")
     }

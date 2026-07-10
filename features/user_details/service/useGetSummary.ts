@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { UserDetailsApi } from "../api/userDetails.auth";
+import { UserDetailsApi } from "../api/userDetails.api";
 import { userSummary } from "../types/userSummary.types";
 export function useGetSummary(){
     const [loading, setloading] = useState<boolean>(false)
@@ -12,7 +12,7 @@ export function useGetSummary(){
     async function getSummary(phoneNumber:string){
         try {
             setloading(true)
-            const response = await UserDetailsApi.getSummary(phoneNumber)
+            const response = await UserDetailsApi.getSummaryofUser(phoneNumber)
             if(response.status=200){
                 setuserSummary(prev=>({
                     ...prev,

@@ -1,8 +1,15 @@
+import { AuthStore } from "@/features/auth/store/authstore"
+import IsReadyToGo from "@/features/user_details/components/IsReadyToGo"
 import UserSummaryScreen from "@/features/user_details/screens/UserSummaryScreeen"
+import UserTopNotchScreen from "@/features/user_details/screens/UserTopNotchScreen"
+import { LinearGradient } from "expo-linear-gradient"
 import * as Location from "expo-location"
+import { LoaderCircleIcon } from "lucide-react-native"
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps"
+import { SafeAreaView } from "react-native-safe-area-context"
+import sendLocation from "./helper/sendlocation"
 const Home = () => {
   type location = {
     latitude: number,
@@ -13,20 +20,22 @@ const Home = () => {
     longitude: 0
   })
   const [loading, setLoading] = useState<boolean>(true);
-  useEffect(() => {
+  const userId = AuthStore.getState().user?.userID
+    useEffect(() => {
     let subscribe: any;
-    async function getDone() {
+    async function getDone() { //instead of watching pos we can diretly set a interval to send location --->todo in future
       subscribe = await Location.watchPositionAsync(
         {
           accuracy: Location.Accuracy.High,
-          timeInterval: 1000, //need to modify
-          distanceInterval: 2 //need to update
+          timeInterval: 3000, //need to modify
+          // distanceInterval: 3 //need to update
         },
         (location) => {
           let lati = location.coords.latitude;
           let longi = location.coords.longitude
           setlatAndlong({ latitude: lati, longitude: longi })
-          console.log("new updated loc", { lati, longi })             //todo remove
+          sendLocation({latitude:lati,longitude:longi,userId:userId||0}) //send driver location through websocket
+          console.log("new updated loc", { lati, longi ,userId})                //todo remove
           setLoading(false)
         }
       )
@@ -42,44 +51,56 @@ const Home = () => {
   }, [])
 
   return (
-    <View>
-      <View style={style.mapdiv}>
-        {loading ? (<Text>Loading....</Text>) : (
-          <MapView
-            provider={PROVIDER_GOOGLE}
-            // provider={PROVIDER_DEFAULT}
-            showsCompass={true}
-            showsTraffic={true}
-            style={StyleSheet.absoluteFillObject}
+    <LinearGradient colors={["#16ecbd", "#16ecbd", "transparent"]} style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView
+          contentContainerStyle={style.container}
+          showsVerticalScrollIndicator={false}
+        >
+          
+          <UserTopNotchScreen />
+          <View style={style.mapdiv}>
+            {loading ? (<LoaderCircleIcon size={50} color='rgb(27, 185, 133) '/>) : (
+              <MapView
+                provider={PROVIDER_GOOGLE}
+                showsCompass={true}
+                showsTraffic={true}
+                style={StyleSheet.absoluteFill}
 
-            region={{
-              latitude: latAndlong.latitude,
-              longitude: latAndlong.longitude,
-              latitudeDelta: 0.002,
-              longitudeDelta: 0.002
-            }}
-
-            userInterfaceStyle='dark'
-            customMapStyle={mapStyle}
-            showsUserLocation
-            showsMyLocationButton
-          >
-          </MapView>)}
-      </View>
-      <View>
-        <UserSummaryScreen/>
-      </View>
-    </View>
+                region={{
+                  latitude: latAndlong.latitude,
+                  longitude: latAndlong.longitude,
+                  latitudeDelta: 0.002,
+                  longitudeDelta: 0.002
+                }}
+                showsUserLocation
+                showsMyLocationButton
+              >
+              </MapView>)}
+          </View>
+          {/* <View> */}
+            {!loading && <IsReadyToGo/>}
+            {!loading && <UserSummaryScreen />}
+          {/* </View> */}
+          </ScrollView>
+        </SafeAreaView>
+    </LinearGradient>
   )
 }
 const style = StyleSheet.create({
-  mapdiv: {
-    // flex:1,
-    height: 400,
+  container: {
+        padding:5,
+        gap:5,
+  },
+  main: {
+    height: 800,
     width: 'auto',
-    borderBottomLeftRadius:10,
-    borderBottomRightRadius:10
-    // flex:1
+  },
+  mapdiv: {
+    height: 320,
+    width: 'auto',
+    borderRadius:20
+    // border
   }
 })
 const mapStyle = [
