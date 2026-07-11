@@ -42,7 +42,7 @@ const SignupForm = ({ loading }: props) => {
                                 placeholder="Username"
                                 onBlur={onBlur}
                                 onChangeText={onChange}
-                                keyboardType="number-pad"
+                                keyboardType='default'
                                 value={value}
                                 style={styles.Textinput}
                             />
@@ -60,7 +60,7 @@ const SignupForm = ({ loading }: props) => {
                                 placeholder="vehicle type"
                                 onBlur={onBlur}
                                 onChangeText={onChange}
-                                keyboardType="number-pad"
+                                keyboardType='default'
                                 value={value}
                                 style={styles.Textinput}
                             />

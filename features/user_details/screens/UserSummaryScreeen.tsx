@@ -20,25 +20,25 @@ const UserSummaryScreen = () => {
       name: "Earnings",
       value: `₹${userSummary?.earnings ?? 0}`,
       icon: Wallet,
-      color: "#16A34A",
+      color: "#1dc293",
     },
     {
       name: "Rides",
       value: userSummary?.rides ?? 0,
       icon: Car,
-      color: "#2563EB",
+      color: "#1dc293",
     },
     {
       name: "Rating",
       value: userSummary?.rating ?? "0.0",
       icon: Star,
-      color: "#F59E0B",
+      color: "#1dc293",
     },
     {
       name: "Online Time",
       value: userSummary?.onlineTime ?? "0h",
       icon: Clock,
-      color: "#7C3AED",
+      color: "#1dc293",
     },
   ];
 
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   container: {
     // margin: 2,
     padding: 3,
-    backgroundColor: "rgba(255, 255, 255, 0.55)", // translucent
+    backgroundColor: "rgba(255, 255, 255, 0.95)", // translucent
     borderRadius: 10,
     // elevation: 4,
     // shadowColor: "#000",

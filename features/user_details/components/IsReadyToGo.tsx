@@ -20,7 +20,7 @@ const IsReadyToGo = () => {
   };
   return (
     <View style={styles.container}>
-    <Focus color='#411ac2' size={30}/>
+    <Focus color='#1dc293' size={30}/>
       <Text style={styles.title}>
         {isReady ? 'Ready to Accept Rides' : 'Not Accepting Rides'}
       </Text>
@@ -28,7 +28,7 @@ const IsReadyToGo = () => {
       <Switch
         value={isReady}
         onValueChange={handleToggle}
-        trackColor={{ false: '#767577', true: '#221fc3' }}
+        trackColor={{ false: '#767577', true: '#1dc293' }}
         thumbColor="#ffffff"
       />
     </View>
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding:5,
-    backgroundColor: "rgba(255, 255, 255, 0.55)", // translucent
+    backgroundColor: "rgba(255, 255, 255, 0.95)", // translucent
     borderRadius: 10,
     // elevation: 2,
   },

@@ -25,7 +25,12 @@ export class UserDetailsApi{
         })
     }
     static getRecentTrips(phoneNumber:string){
+        const jwt = AuthStore.getState().jwt
          console.log("Request has been made to URL",server.defaults.baseURL+ENDPOINTS.driverDetails.getRecentTrips(phoneNumber));
-         return server.get(ENDPOINTS.driverDetails.getRecentTrips(phoneNumber))
+         return server.get(ENDPOINTS.driverDetails.getRecentTrips(phoneNumber),{
+            headers:{
+                Authorization:`Bearer ${jwt}`
+            }
+         })
     }
 }

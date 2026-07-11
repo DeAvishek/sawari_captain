@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
 
-    backgroundColor: "rgba(255, 255, 255, 0.55)s", // translucent
+    // backgroundColor: "#23a683", // translucent
     borderRadius: 10,
 
     borderWidth: 1,

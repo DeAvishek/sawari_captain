@@ -1,5 +1,6 @@
 import { AuthStore } from "@/features/auth/store/authstore"
 import IsReadyToGo from "@/features/user_details/components/IsReadyToGo"
+import RecentTrips from "@/features/user_details/components/RecentTrips"
 import UserSummaryScreen from "@/features/user_details/screens/UserSummaryScreeen"
 import UserTopNotchScreen from "@/features/user_details/screens/UserTopNotchScreen"
 import { LinearGradient } from "expo-linear-gradient"
@@ -81,6 +82,7 @@ const Home = () => {
           {/* <View> */}
             {!loading && <IsReadyToGo/>}
             {!loading && <UserSummaryScreen />}
+            <RecentTrips/>
           {/* </View> */}
           </ScrollView>
         </SafeAreaView>
