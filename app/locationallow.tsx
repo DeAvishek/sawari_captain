@@ -4,10 +4,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
 import { router } from "expo-router";
 import React, { useEffect, useState } from 'react';
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import sendLocation from "./helper/sendlocation";
 import websocket from './helper/websocket';
-const { width } = Dimensions.get('window');
 const Locationallow = () => {
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const userId = AuthStore.getState().user?.userID
@@ -57,8 +56,7 @@ const Locationallow = () => {
             Location permission not enabled
           </Text>
           <Text style={styles.subtitle}>
-            Sharing location permission helps us improve your ride booking and
-            pickup experience
+            Sharing location permission helps us improve your pickup experience
           </Text>
         </View>
 

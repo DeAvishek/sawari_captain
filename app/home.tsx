@@ -1,4 +1,6 @@
 import { AuthStore } from "@/features/auth/store/authstore"
+import NotificationBar from "@/features/trips/Components/NotificationBar"
+import { tripTypes } from "@/features/trips/types/trip.types"
 import IsReadyToGo from "@/features/user_details/components/IsReadyToGo"
 import RecentTrips from "@/features/user_details/components/RecentTrips"
 import UserSummaryScreen from "@/features/user_details/screens/UserSummaryScreeen"
@@ -11,6 +13,7 @@ import { ScrollView, StyleSheet, View } from 'react-native'
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps"
 import { SafeAreaView } from "react-native-safe-area-context"
 import sendLocation from "./helper/sendlocation"
+import websocket from "./helper/websocket"
 const Home = () => {
   type location = {
     latitude: number,
@@ -21,36 +24,61 @@ const Home = () => {
     longitude: 0
   })
   const [loading, setLoading] = useState<boolean>(true);
+  const [tripRequest, setTripRequest] = useState<tripTypes | null>(null);
   const userId = AuthStore.getState().user?.userID
-    useEffect(() => {
-    let subscribe: any;
-    async function getDone() { //instead of watching pos we can diretly set a interval to send location --->todo in future
-      subscribe = await Location.watchPositionAsync(
-        {
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
+    const sendCurrentLocation = async () => {
+      try {
+        const location = await Location.getCurrentPositionAsync({
           accuracy: Location.Accuracy.High,
-          timeInterval: 3000, //need to modify
-          // distanceInterval: 3 //need to update
-        },
-        (location) => {
-          let lati = location.coords.latitude;
-          let longi = location.coords.longitude
-          setlatAndlong({ latitude: lati, longitude: longi })
-          sendLocation({latitude:lati,longitude:longi,userId:userId||0}) //send driver location through websocket
-          console.log("new updated loc", { lati, longi ,userId})                //todo remove
-          setLoading(false)
-        }
-      )
+        });
 
-    }
-    getDone()
-    return () => {
-      if (subscribe) {
-        subscribe.remove()
+        const latitude = location.coords.latitude;
+        const longitude = location.coords.longitude;
+
+        setlatAndlong({
+          latitude,
+          longitude,
+        });
+
+        sendLocation({
+          latitude,
+          longitude,
+          userId: userId || 0,
+        });
+
+        console.log("new updated loc", {
+          latitude,
+          longitude,
+          userId,
+        });
+
+        setLoading(false);
+      } catch (error) {
+        console.log("Error getting location:", error);
       }
-    }
+    };
 
-  }, [])
+    // Get location immediately
+    sendCurrentLocation();
 
+    // Then every 3 seconds
+    interval = setInterval(sendCurrentLocation, 100000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  //-->
+  websocket.subscribe(`/topic/trip/toDriver/${userId}`, (message) => {
+    const decoder = new TextDecoder();
+    const jsonString = decoder.decode(message._binaryBody);
+    const trip: tripTypes = JSON.parse(jsonString);
+    setTripRequest(trip)
+    console.log(trip)
+  })
   return (
     <LinearGradient colors={["#16ecbd", "#16ecbd", "transparent"]} style={{ flex: 1 }}>
       <SafeAreaView style={{ flex: 1 }}>
@@ -58,10 +86,10 @@ const Home = () => {
           contentContainerStyle={style.container}
           showsVerticalScrollIndicator={false}
         >
-          
+
           <UserTopNotchScreen />
           <View style={style.mapdiv}>
-            {loading ? (<LoaderCircleIcon size={50} color='rgb(27, 185, 133) '/>) : (
+            {loading ? (<LoaderCircleIcon size={50} color='rgb(27, 185, 133) ' />) : (
               <MapView
                 provider={PROVIDER_GOOGLE}
                 showsCompass={true}
@@ -80,19 +108,26 @@ const Home = () => {
               </MapView>)}
           </View>
           {/* <View> */}
-            {!loading && <IsReadyToGo/>}
-            {!loading && <UserSummaryScreen />}
-            <RecentTrips/>
-          {/* </View> */}
-          </ScrollView>
-        </SafeAreaView>
+          {!loading && <IsReadyToGo />}
+          {!loading && <UserSummaryScreen />}
+          <RecentTrips />
+          {tripRequest && <NotificationBar tripId={tripRequest.tripId} source={tripRequest.source}
+          destination={tripRequest.destination} 
+          fare={tripRequest.fare}
+          duration={tripRequest.duration}
+          sourceLatitude={tripRequest.sourceLatitude}
+          sourceLongitude={tripRequest.sourceLongitude}
+          distance={tripRequest.distance}
+          />}
+        </ScrollView>
+      </SafeAreaView>
     </LinearGradient>
   )
 }
 const style = StyleSheet.create({
   container: {
-        padding:5,
-        gap:5,
+    padding: 5,
+    gap: 5,
   },
   main: {
     height: 800,
@@ -101,9 +136,32 @@ const style = StyleSheet.create({
   mapdiv: {
     height: 320,
     width: 'auto',
-    borderRadius:20
+    borderRadius: 20
     // border
-  }
+  },
+  notificationBar: {
+    position: "absolute",
+    top: 50,
+    left: 15,
+    right: 15,
+    padding: 16,
+    borderRadius: 12,
+    backgroundColor: "white",
+    elevation: 8,
+    shadowOpacity: 0.2,
+  },
+
+  title: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+
+  buttons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 15,
+  },
 })
 const mapStyle = [
   {
