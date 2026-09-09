@@ -2,6 +2,13 @@ import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { tripTypes } from '../types/trip.types'
 const NotificationBar = (tripRequest:tripTypes) => {
+    const onClickOnAccept=()=>{
+        //send it to backend
+        tripRequest.setState();
+    }
+    const onClickOnReject=()=>{
+        tripRequest.setState();
+    }
     return (
         <View style={style.notificationBar}>
             <Text style={style.title}>🚕 New Ride Request</Text>
@@ -14,15 +21,13 @@ const NotificationBar = (tripRequest:tripTypes) => {
 
             <View style={style.buttons}>
                 <TouchableOpacity
-                    onPress={() => console.log("hii")}
+                    onPress={onClickOnReject}
                 >
                     <Text>Reject</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    onPress={() => {
-                        console.log("Accept:", tripRequest.tripId);
-                    }}
+                    onPress={onClickOnAccept}
                 >
                     <Text>Accept</Text>
                 </TouchableOpacity>

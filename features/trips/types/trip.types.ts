@@ -7,4 +7,5 @@ export interface tripTypes{
     fare:number|null
     distance:number|null
     duration:number|null
+    setState:()=>void
 }
