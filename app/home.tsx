@@ -25,7 +25,7 @@ const Home = () => {
   })
   const [loading, setLoading] = useState<boolean>(true);
   const [tripRequest, setTripRequest] = useState<tripTypes | null>(null);
-  const [isPopUpNotification,setisPopUpNotification] = useState<boolean>(false);
+  const [isPopUpNotification, setisPopUpNotification] = useState<boolean>(false);
   const userId = AuthStore.getState().user?.userID
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
@@ -81,8 +81,8 @@ const Home = () => {
     setNotficationState()
     console.log(trip)
   })
-  const setNotficationState=()=>{
-    setisPopUpNotification(!isPopUpNotification);
+  const setNotficationState = () => {
+    setisPopUpNotification(false);
   }
   return (
     <LinearGradient colors={["#16ecbd", "#16ecbd", "transparent"]} style={{ flex: 1 }}>
@@ -116,15 +116,11 @@ const Home = () => {
           {!loading && <IsReadyToGo />}
           {!loading && <UserSummaryScreen />}
           <RecentTrips />
-          {(tripRequest && isPopUpNotification) && <NotificationBar tripId={tripRequest.tripId} source={tripRequest.source}
-          destination={tripRequest.destination} 
-          fare={tripRequest.fare}
-          duration={tripRequest.duration}
-          sourceLatitude={tripRequest.sourceLatitude}
-          sourceLongitude={tripRequest.sourceLongitude}
-          distance={tripRequest.distance}
-          setState={setNotficationState}
-          />}
+          {(tripRequest && isPopUpNotification) &&
+            <NotificationBar
+              tripRequest={tripRequest}
+              setState={setNotficationState}
+            />}
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>

@@ -1,13 +1,20 @@
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { useTripAcceptanceByDriver } from '../service/tripAcceptanceByDriver.sv'
 import { tripTypes } from '../types/trip.types'
-const NotificationBar = (tripRequest:tripTypes) => {
+type prop={
+    setState:()=>void
+    tripRequest:tripTypes
+}
+const NotificationBar = ({setState,tripRequest}:prop) => {
+    const {loading,tripAcceptedbyDriver} = useTripAcceptanceByDriver()
     const onClickOnAccept=()=>{
         //send it to backend
-        tripRequest.setState();
+        tripAcceptedbyDriver(tripRequest)
+        setState()
     }
     const onClickOnReject=()=>{
-        tripRequest.setState();
+        setState()
     }
     return (
         <View style={style.notificationBar}>
